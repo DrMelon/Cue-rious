@@ -21,7 +21,7 @@ namespace OtterTemplate
         public static string MUSIC_MENU = ASSET_BASE_PATH + "Music/menu_test.ogg";
 
         public static string GFX_DEBUGMENU = ASSET_BASE_PATH + "Graphics/debug_menu.png";
-        public static string FNT_SYSTEM = ASSET_BASE_PATH + "Graphics/systemfont.png";
+        public static string FNT_SYSTEM = ASSET_BASE_PATH + "Graphics/font.otf";
 
     }
 }

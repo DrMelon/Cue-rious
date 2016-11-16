@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Otter;
+using OtterTemplate.Entities;
 
 //----------------
 // Author: J. Brown (DrMelon)
@@ -19,11 +20,9 @@ namespace OtterTemplate.Scenes
         // Storage
         Music MenuMusic;
         Image DebugMenuImage;
-        BitmapFont SystemFont;
+        Font SystemFont;
         RichText MenuTitle;
-        RichText MenuPlayDebugLevel;
-        RichText MenuSoundTest;
-        RichText MenuQuit;
+        Menu MainMenu;
 
         ControllerXbox360 Player1Controller;
 
@@ -41,24 +40,17 @@ namespace OtterTemplate.Scenes
             DebugMenuImage.Repeat = true;
 
             // Load font & text
-            SystemFont = new BitmapFont(new Texture(Assets.FNT_SYSTEM), 8, 8, 65);
+            SystemFont = new Font(Assets.FNT_SYSTEM);
 
-            MenuTitle = new RichText("{waveAmpY:8}{waveRateY:2}DEBUG MENU", SystemFont, 8, 100, 100);
-            MenuTitle.MonospaceWidth = 8;
-            MenuTitle.SetPosition(200, 100);
+            // Title
+            MenuTitle = new RichText("{color:FFFAF0}{shadowX:2}{shadowY:2}{colorShadow:2e2238}Cue-rious.", SystemFont, 48, 100, 100);
+            MenuTitle.SetPosition(90, 72);
             MenuTitle.CenterOrigin();
 
-            MenuPlayDebugLevel = new RichText("{color:FF0}PLAY GAME", SystemFont, 8, 100, 100);
-            MenuPlayDebugLevel.MonospaceWidth = 8;
-            MenuPlayDebugLevel.SetPosition(100, 120);
-
-            MenuSoundTest = new RichText("SOUND TEST", SystemFont, 8, 100, 100);
-            MenuSoundTest.MonospaceWidth = 8;
-            MenuSoundTest.SetPosition(100, 130);
-
-            MenuQuit = new RichText("EXIT", SystemFont, 8, 100, 100);
-            MenuQuit.MonospaceWidth = 8;
-            MenuQuit.SetPosition(100, 140);
+            // Main Menu
+            MainMenu = new Menu(new Dictionary<string, Action>() { { "Play Pool", DoThing }, { "Don't", Quit } }, SystemFont, 32, 34, "{color:FFFAF0}{shadowX:2}{shadowY:2}{colorShadow:2e2238}", "{color:EEDC82}{shadowX:3}{shadowY:3}{colorShadow:2e2238}");
+            MainMenu.X = 32;
+            MainMenu.Y = 172;
 
             // Fetch controller
             Player1Controller = Game.Session("Player1").GetController<ControllerXbox360>();
@@ -67,9 +59,7 @@ namespace OtterTemplate.Scenes
 
             AddGraphic(DebugMenuImage);
             AddGraphic(MenuTitle);
-            AddGraphic(MenuPlayDebugLevel);
-            AddGraphic(MenuSoundTest);
-            AddGraphic(MenuQuit);
+            Add(MainMenu);
         }
 
         public override void Update()
@@ -80,88 +70,19 @@ namespace OtterTemplate.Scenes
             DebugMenuImage.X += 1;
             DebugMenuImage.Y -= 1;
 
-
-            // Menu Controls
-
-            if(Player1Controller.DPad.Up.Pressed)
-            {
-                if(CurrentSelection == 0)
-                {
-                    CurrentSelection = MaxSelection;
-                }
-                else
-                {
-                    CurrentSelection--;
-                }
-
-                CheckSelection();
-
-            }
-
-
-
-            if(Player1Controller.DPad.Down.Pressed)
-            {
-                if (CurrentSelection == MaxSelection)
-                {
-                    CurrentSelection = 0;
-                }
-                else
-                {
-                    CurrentSelection++;
-                }
-
-                CheckSelection();
-
-            }
-
-            if(Player1Controller.Start.Pressed)
-            {
-                DoSelection();
-            }
-
         }
 
-        public void CheckSelection()
+        public void DoThing()
         {
-            switch (CurrentSelection)
-            {
-                case 0:
-                    MenuPlayDebugLevel.String = "{color:FF0}PLAY GAME";
-                    MenuSoundTest.String = "SOUND TEST";
-                    MenuQuit.String = "EXIT";
-                    break;
-                case 1:
-                    MenuPlayDebugLevel.String = "PLAY TEST LEVEL";
-                    MenuSoundTest.String = "{color:FF0}SOUND TEST";
-                    MenuQuit.String = "EXIT";
-                    break;
-                case 2:
-                    MenuPlayDebugLevel.String = "PLAY TEST LEVEL";
-                    MenuSoundTest.String = "SOUND TEST";
-                    MenuQuit.String = "{color:FF0}EXIT";
-                    break;
-            }
+            Util.Log("Thing got did.");
+            
         }
 
-        public void DoSelection()
+        public void Quit()
         {
-            switch (CurrentSelection)
-            {
-                case 0:
-                    // Load Game
-                    //Game.AddScene();
-                    break;
-                case 1:
-                    // Load Sound Test Screen
-                    //
-                    break;
-                case 2:
-                    // Quit
-                    Game.Close();
-                    break;
-            }
+            Game.Close();
         }
+
 
     }
 }
