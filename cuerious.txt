@@ -1,0 +1,30 @@
+Cue-Rious Mechanic Ideas
+
+Isometric world. 
+Angle the cue for english/lift/spin/curve.
+Hotseat, so MP would just send angle/shot strength data. Do worms-style delayed turn info.
+Players can compete to pot all balls on map, regardless of colour/stripe, finishing with 8
+Players can compete to pot solids/stripes after a break in an arena-style map.
+Players can compete to pot as many as possible in turn limit with trickshots.
+
+Pockets on the map can either accept an infinite number of balls or have a limit. When the limit is reached, they just close over and become like normal terrain.
+
+Can have wormhole pockets, where things fall in one way and come out another. Pipes, etc. Like marble madness/micro machines.
+
+Scratching results in a missed turn, balls reset.
+
+
+Powerups: 
+
+* Aimline extend, to see where curve shots can go etc.
+* Bounciness up
+* Bounciness down
+* Accelerate ball
+* Decelerate ball
+* Jump/Float
+* Sudden stop
+* Reverse direction
+* World grid/darkening to highlight distances
+* Create pocket at bounce location
+
+
