@@ -1,7 +1,7 @@
 Cue-Rious Mechanic Ideas
 
 Isometric world. 
-Angle the cue for english/lift/spin/curve.
+Angle the cue for english/draw/follow/stop/lift/spin/curve.
 Hotseat, so MP would just send angle/shot strength data. Do worms-style delayed turn info.
 Players can compete to pot all balls on map, regardless of colour/stripe, finishing with 8
 Players can compete to pot solids/stripes after a break in an arena-style map.
@@ -13,6 +13,7 @@ Can have wormhole pockets, where things fall in one way and come out another. Pi
 
 Scratching results in a missed turn, balls reset.
 
+English selectable via common strike points? Maybe with QTE for accuracy. Definitely QTE slider for strength.
 
 Powerups: 
 
