@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Otter;
 
-namespace OtterTemplate.Entities
+namespace Cuerious.Entities
 {
     class Menu : Entity
     {
@@ -75,7 +75,6 @@ namespace OtterTemplate.Entities
             {
                 HandleInput();
             }
-            
 
         }
 

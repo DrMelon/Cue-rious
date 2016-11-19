@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 //----------------
 // Author: J. Brown (DrMelon)
-// Part of the [OtterTemplate] Project.
+// Part of the [Cuerious] Project.
 // Date: 09/05/2016
 //----------------
 // Purpose: Asset management.
 
-namespace OtterTemplate
+namespace Cuerious
 {
     class Assets
     {
@@ -22,6 +22,8 @@ namespace OtterTemplate
 
         public static string GFX_DEBUGMENU = ASSET_BASE_PATH + "Graphics/debug_menu.png";
         public static string FNT_SYSTEM = ASSET_BASE_PATH + "Graphics/font.otf";
+
+        public static string GFX_TILEMAP_01 = ASSET_BASE_PATH + "Graphics/tilemap.png";
 
     }
 }

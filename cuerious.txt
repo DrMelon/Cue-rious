@@ -15,6 +15,11 @@ Scratching results in a missed turn, balls reset.
 
 English selectable via common strike points? Maybe with QTE for accuracy. Definitely QTE slider for strength.
 
+Closed pockets can also act as switches to open/close doors/bridges/tubes.
+Chain reactions important. Peggle/Bust a move feel.
+
+Hazards like spikes, oil, etc
+
 Powerups: 
 
 * Aimline extend, to see where curve shots can go etc.
