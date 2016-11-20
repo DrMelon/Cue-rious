@@ -80,12 +80,12 @@ namespace Cuerious.Scenes
 
            
 
-         //   if (cueBallYMoveAmt > 2.0f)
-          //  {
-         //       cueBallYPos = cueBall.GetIsoPosition().Y;
-         //       cueBallYMoveAmt = 0.0f;
+            if (cueBallYMoveAmt > 0.1f)
+            {
+                cueBallYPos = cueBall.GetIsoPosition().Y;
+                cueBallYMoveAmt = 0.0f;
                 UpdateMaps();
-        //    }
+            }
 
 
             cueBall.myMovement.IsoPos.Y = 6 + ((float)Math.Sin(Game.Timer * 0.01f) * 4.0f);
