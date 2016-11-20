@@ -110,6 +110,8 @@ namespace Cuerious.Scenes
         public void UpdateMaps()
         {
             Util.Log("UpdateMaps Called: " + ((((int)cueBall.GetTileIsoPosition().Y) + 1)).ToString());
+
+            // rewrite createtilemap to ret a list of entities with layering offsets, basing criteria on central Y strip & z-height of player
             renderMapA = IsometricUtils.CreateTilemapFrom3D(Assets.GFX_TILEMAP_01, isoMap, (((int)(cueBall.GetTileIsoPosition().Y + 0.51f))) + 1);
             renderMapB = IsometricUtils.CreateTilemapFrom3D(Assets.GFX_TILEMAP_01, isoMap, -1, (((int)(cueBall.GetTileIsoPosition().Y + 0.51f))) + 1);
 
