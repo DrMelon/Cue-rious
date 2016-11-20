@@ -25,5 +25,8 @@ namespace Cuerious
 
         public static string GFX_TILEMAP_01 = ASSET_BASE_PATH + "Graphics/tilemap.png";
 
+        public static string GFX_CUEBALL = ASSET_BASE_PATH + "Graphics/cueball.png";
+        public static string GFX_CUEBALL_D = ASSET_BASE_PATH + "Graphics/cueball_dissolve.png";
+
     }
 }

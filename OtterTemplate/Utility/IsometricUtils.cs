@@ -81,10 +81,23 @@ namespace Cuerious.Utility
 
 
         // This creates a 2d Otter tilemap object from a 3d map array
-        public static Tilemap CreateTilemapFrom3D(string tileset, IsoMap isoMap)
+        public static Tilemap CreateTilemapFrom3D(string tileset, IsoMap isoMap, int zmax = -1, int zmin = -1)
         {
             // Need at least 4x4 space to represent one iso-tile.
             Tilemap outmap = new Tilemap(tileset, (isoMap.sizeX+2) * 4 * 16, (isoMap.sizeY+2) * 4 * 16, 16, 16);
+
+
+            int zMin = zmin;
+            int zMax = zmax;
+
+            if(zmin < 0 || zmin > isoMap.sizeY)
+            {
+                zMin = 0;
+            }
+            if(zmax < 0 || zmax > isoMap.sizeY)
+            {
+                zMax = isoMap.sizeY;
+            }
 
             // Tile layering notes:
             // 1 Layer for Floors, 1 for walls?
@@ -93,7 +106,7 @@ namespace Cuerious.Utility
             // yeah, loop Y coord, do floor->wall pass. so higher-y floors draw over walls?
             // single layer per y-coord this way
 
-            for(int Y = 0; Y < isoMap.sizeY; Y++)
+            for(int Y = zMin; Y < zMax; Y++)
             {
                 outmap.AddLayer("YLayer" + Y.ToString(), (-Y*2) - 1);
                 outmap.AddLayer("YLayerW" + Y.ToString(), (-Y*2) - 2);
