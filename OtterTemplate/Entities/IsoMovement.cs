@@ -51,7 +51,7 @@ namespace Cuerious.Entities
             groundCheckPos.Z -= Radius;
             Vector3 tilePos = groundCheckPos / 16;    
 
-            if(theMap.GetTile((int)tilePos.X, (int)tilePos.Y, (int)tilePos.Z) != IsometricUtils.IsoMap.IsoTileType.NONE)
+            if(theMap.GetTile((int)tilePos.X, (int)tilePos.Y).tileType != IsometricUtils.IsoMap.IsoTileType.NONE)
             {
                 return true;
             }

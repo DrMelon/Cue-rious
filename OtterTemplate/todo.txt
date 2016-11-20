@@ -1,0 +1,12 @@
+TODO:
+
+TILE RENDERING:
+1. Fix tilemap so that it uses an X, Y to get: tile type, height info
+2. Rework graphics builder so that a ring of tiles surrounding a spire displays correctly.
+3. Rework occlusion
+
+GAMEPLAY:
+1. Get ball-ground-wall physics in.
+2. Get the ball launch working.
+3. Get ball-ball collisions working.
+4. Get ball-hole interaction working.

@@ -45,7 +45,7 @@ namespace Cuerious.Scenes
             Player1Controller = Game.Session("Player1").GetController<ControllerXbox360>();
 
 
-            isoMap = new IsometricUtils.IsoMap(5, 5, 5);
+            isoMap = new IsometricUtils.IsoMap(5, 5);
             isoMap.SetTile(0, 0, 0, IsometricUtils.IsoMap.IsoTileType.FLOOR);
             isoMap.SetTile(1, 1, 0, IsometricUtils.IsoMap.IsoTileType.FLOOR);
             isoMap.SetTile(1, 2, 0, IsometricUtils.IsoMap.IsoTileType.FLOOR);

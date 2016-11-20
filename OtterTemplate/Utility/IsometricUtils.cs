@@ -12,6 +12,7 @@ namespace Cuerious.Utility
 
         public static float IsoWidth = 32;
         public static float IsoHeight = 16;
+        public static float MaxMapZ = 32;
 
         // This returns the X, Y screen position, and the layer number.
         public static Vector3 IsoToScreenSpace(Vector3 pos)
@@ -40,40 +41,48 @@ namespace Cuerious.Utility
                 ERROR
             }
 
-
-            public IsoTileType[,,] mapArray;
-            public int sizeX, sizeY, sizeZ;
-
-            public IsoMap(int sX, int sY, int sZ)
+            public struct IsoTile
             {
-                mapArray = new IsoTileType[sX, sY, sZ];
-                sizeX = sX;
-                sizeY = sY;
-                sizeZ = sZ;
+                public IsoTileType tileType;
+                public int height;
             }
 
-            public IsoTileType GetTile(int x, int y, int z)
+
+            public IsoTile[,] mapArray;
+            public int sizeX, sizeY;
+
+            public IsoMap(int sX, int sY)
             {
-                if(x < 0 || y < 0 || z < 0 || x >= sizeX || y >= sizeY || z >= sizeZ)
+                mapArray = new IsoTile[sX, sY];
+                sizeX = sX;
+                sizeY = sY;
+            }
+
+            public IsoTile GetTile(int x, int y)
+            {
+                if(x < 0 || y < 0 || x >= sizeX || y >= sizeY)
                 {
                     // NO
                     Util.Log("Tile index out of range!");
-                    return IsoTileType.ERROR;
+                    IsoTile errTile = new IsoTile();
+                    errTile.tileType = IsoTileType.ERROR;
+                    return errTile;
                 }
 
-                return mapArray[x, y, z];
+                return mapArray[x, y];
             }
 
             public void SetTile(int x, int y, int z, IsoTileType type)
             {
-                if (x < 0 || y < 0 || z < 0 || x >= sizeX || y >= sizeY || z >= sizeZ)
+                if (x < 0 || y < 0 || z < 0 || x >= sizeX || y >= sizeY || z >= MaxMapZ)
                 {
                     // NO
                     Util.Log("Tile index out of range!");
                     return;
                 }
 
-                mapArray[x, y, z] = type;
+                mapArray[x, y].tileType = type;
+                mapArray[x, y].height = z;
             }
 
 
@@ -110,81 +119,68 @@ namespace Cuerious.Utility
             {
                 outmap.AddLayer("YLayer" + Y.ToString(), (-Y*2) - 1);
                 outmap.AddLayer("YLayerW" + Y.ToString(), (-Y*2) - 2);
-
-                for (int Z = 0; Z < isoMap.sizeZ; Z++)
+                for(int X = 0; X < isoMap.sizeX; X++)
                 {
-                    for(int X = 0; X < isoMap.sizeX; X++)
+                    IsoMap.IsoTile curTile = isoMap.GetTile(X, Y);
+
+                    if (curTile.tileType == IsoMap.IsoTileType.FLOOR)
                     {
-                       
-                        if(isoMap.GetTile(X, Y, Z) == IsoMap.IsoTileType.FLOOR)
+                        // draw floor tiles
+                        // 4x4 tile array
+                        Vector3 scrPos = IsometricUtils.IsoToScreenSpace(new Vector3(X, Y, curTile.height));
+
+                        int xPlacement = (int)(scrPos.X / 8) + 1;
+                        int yPlacement = (int)(scrPos.Y / 8) + 1;
+
+                        outmap.SetTile(xPlacement, yPlacement, 9, "YLayer" + Y.ToString());
+                        outmap.SetTile((xPlacement) + 1, yPlacement, 10, "YLayer" + Y.ToString());
+                        outmap.SetTile((xPlacement) + 2, yPlacement, 7, "YLayer" + Y.ToString());
+                        outmap.SetTile((xPlacement) + 3, yPlacement, 8, "YLayer" + Y.ToString());
+
+                        outmap.SetTile(xPlacement, yPlacement + 1, 3, "YLayer" + Y.ToString());
+                        outmap.SetTile((xPlacement) + 1, yPlacement + 1, 4, "YLayer" + Y.ToString());
+                        outmap.SetTile((xPlacement) + 2, yPlacement + 1, 5, "YLayer" + Y.ToString());
+                        outmap.SetTile((xPlacement) + 3, yPlacement + 1, 6, "YLayer" + Y.ToString());
+
+                        // draw walls on top (based on zcoord?)
+
+                        outmap.SetTile(xPlacement, yPlacement + 1, 19, "YLayerW" + Y.ToString());
+                        outmap.SetTile((xPlacement) + 1, yPlacement + 1, 20, "YLayerW" + Y.ToString());
+                        outmap.SetTile((xPlacement) + 2, yPlacement + 1, 21, "YLayerW" + Y.ToString());
+                        outmap.SetTile((xPlacement) + 3, yPlacement + 1, 22, "YLayerW" + Y.ToString());
+
+                        if(curTile.tileType > 0)
                         {
-                            // draw floor tiles
-                            // 4x4 tile array
-                            Vector3 scrPos = IsometricUtils.IsoToScreenSpace(new Vector3(X, Y, Z));
-
-                            int xPlacement = (int)(scrPos.X / 8) + 1;
-                            int yPlacement = (int)(scrPos.Y / 8) + 1;
-
-                            outmap.SetTile(xPlacement, yPlacement, 9, "YLayer" + Y.ToString());
-                            outmap.SetTile((xPlacement) + 1, yPlacement, 10, "YLayer" + Y.ToString());
-                            outmap.SetTile((xPlacement) + 2, yPlacement, 7, "YLayer" + Y.ToString());
-                            outmap.SetTile((xPlacement) + 3, yPlacement, 8, "YLayer" + Y.ToString());
-
-                            outmap.SetTile(xPlacement, yPlacement + 1, 3, "YLayer" + Y.ToString());
-                            outmap.SetTile((xPlacement) + 1, yPlacement + 1, 4, "YLayer" + Y.ToString());
-                            outmap.SetTile((xPlacement) + 2, yPlacement + 1, 5, "YLayer" + Y.ToString());
-                            outmap.SetTile((xPlacement) + 3, yPlacement + 1, 6, "YLayer" + Y.ToString());
-
-                            // draw walls on top (based on zcoord?)
-
-                            outmap.SetTile(xPlacement, yPlacement + 1, 19, "YLayerW" + Y.ToString());
-                            outmap.SetTile((xPlacement) + 1, yPlacement + 1, 20, "YLayerW" + Y.ToString());
-                            outmap.SetTile((xPlacement) + 2, yPlacement + 1, 21, "YLayerW" + Y.ToString());
-                            outmap.SetTile((xPlacement) + 3, yPlacement + 1, 22, "YLayerW" + Y.ToString());
-
-                            if(Z > 0)
+                            // do sandwich blocks!
+                            for(int i = 0; i < curTile.height + 1; i++)
                             {
-                                // do sandwich blocks!
-                                for(int i = 0; i < Z+1; i++)
+                                outmap.SetTile(xPlacement, yPlacement + 2 + i, 17, "YLayerW" + Y.ToString());
+                                outmap.SetTile((xPlacement) + 1, yPlacement + 2 + i, 11, "YLayerW" + Y.ToString());
+                                outmap.SetTile((xPlacement) + 2, yPlacement + 2 + i, 12, "YLayerW" + Y.ToString());
+                                outmap.SetTile((xPlacement) + 3, yPlacement + 2 + i, 18, "YLayerW" + Y.ToString());
+
+                                if(i == curTile.height)
                                 {
-                                    outmap.SetTile(xPlacement, yPlacement + 2 + i, 17, "YLayerW" + Y.ToString());
-                                    outmap.SetTile((xPlacement) + 1, yPlacement + 2 + i, 11, "YLayerW" + Y.ToString());
-                                    outmap.SetTile((xPlacement) + 2, yPlacement + 2 + i, 12, "YLayerW" + Y.ToString());
-                                    outmap.SetTile((xPlacement) + 3, yPlacement + 2 + i, 18, "YLayerW" + Y.ToString());
-
-                                    if(i == Z)
-                                    {
-                                        outmap.SetTile(xPlacement, yPlacement + 2 + i, 13, "YLayerW" + Y.ToString());
-                                        outmap.SetTile((xPlacement) + 1, yPlacement + 2 + i, 14, "YLayerW" + Y.ToString());
-                                        outmap.SetTile((xPlacement) + 2, yPlacement + 2 + i, 15, "YLayerW" + Y.ToString());
-                                        outmap.SetTile((xPlacement) + 3, yPlacement + 2 + i, 16, "YLayerW" + Y.ToString());
-                                    }
-                                    
+                                    outmap.SetTile(xPlacement, yPlacement + 2 + i, 13, "YLayerW" + Y.ToString());
+                                    outmap.SetTile((xPlacement) + 1, yPlacement + 2 + i, 14, "YLayerW" + Y.ToString());
+                                    outmap.SetTile((xPlacement) + 2, yPlacement + 2 + i, 15, "YLayerW" + Y.ToString());
+                                    outmap.SetTile((xPlacement) + 3, yPlacement + 2 + i, 16, "YLayerW" + Y.ToString());
                                 }
+                                    
                             }
-                            else
-                            {
-                                outmap.SetTile(xPlacement, yPlacement + 2, 13, "YLayerW" + Y.ToString());
-                                outmap.SetTile((xPlacement) + 1, yPlacement + 2, 14, "YLayerW" + Y.ToString());
-                                outmap.SetTile((xPlacement) + 2, yPlacement + 2, 15, "YLayerW" + Y.ToString());
-                                outmap.SetTile((xPlacement) + 3, yPlacement + 2, 16, "YLayerW" + Y.ToString());
-                            }
-
-                            
                         }
-
-
-
+                        else
+                        {
+                            outmap.SetTile(xPlacement, yPlacement + 2, 13, "YLayerW" + Y.ToString());
+                            outmap.SetTile((xPlacement) + 1, yPlacement + 2, 14, "YLayerW" + Y.ToString());
+                            outmap.SetTile((xPlacement) + 2, yPlacement + 2, 15, "YLayerW" + Y.ToString());
+                            outmap.SetTile((xPlacement) + 3, yPlacement + 2, 16, "YLayerW" + Y.ToString());
+                        }
                     }
                 }
             }
             
             
-     
-
-            // Then, do a layer with the wall tiles on top.
-            
-
             return outmap;
         }
     }
