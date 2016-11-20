@@ -25,7 +25,10 @@ namespace Cuerious.Scenes
 
         IsometricUtils.IsoMap isoMap;
 
-        // NOTE: might need lists of rendermap ents and tilemaps, with zmin and zmax set for each Y-layer a ball exists on...
+        // NOTE: might need lists of rendermap ents and tilemaps, with zmin and zmax set for each Y-layer an obj exists on,
+        // unless we can figure out a better method of occlusion
+
+        // ofc we could just design maps to never have occlusion.
         Entity renderMapEntA;
         Tilemap renderMapA;
         Entity renderMapEntB;
