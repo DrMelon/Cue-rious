@@ -32,14 +32,27 @@ namespace Cuerious.Entities
         {
             base.Update();
 
+            CheckTileCollision();
+
+            if(!FindGround())
+            {
+                IsoVel.Z -= 0.00981f;
+            }
+            else if(IsoVel.Z < 0.0f)
+            {
+                IsoVel.Z = -IsoVel.Z * 0.8f;
+            }
+
             // Update Pos from Vel
             IsoPos += IsoVel;
 
             // Update X and Y to match Iso Pos, also depth layer
             Vector3 convertedPos = IsometricUtils.IsoToScreenSpace(IsoPos);
-            Entity.X = convertedPos.X + (IsometricUtils.IsoWidth*2) - Radius*2;
+            Entity.X = convertedPos.X + (IsometricUtils.IsoWidth * 2) - Radius * 2;
             Entity.Y = convertedPos.Y + (IsometricUtils.IsoHeight * 2) - Radius;
             Entity.Layer = 0;//(int)convertedPos.Z;
+
+
         }
 
         public bool FindGround()
@@ -48,15 +61,38 @@ namespace Cuerious.Entities
 
             // convert current isopos to tilepos
             Vector3 groundCheckPos = IsoPos;
-            groundCheckPos.Z -= Radius;
-            Vector3 tilePos = groundCheckPos / 16;    
+            groundCheckPos.Z -= Radius / 8;
 
-            if(theMap.GetTile((int)tilePos.X, (int)tilePos.Y).tileType != IsometricUtils.IsoMap.IsoTileType.NONE)
+            IsometricUtils.IsoMap.IsoTile theTile = theMap.GetTile((int)groundCheckPos.X / 2, (int)groundCheckPos.Y / 2);
+
+            if (theTile.tileType != IsometricUtils.IsoMap.IsoTileType.NONE && theTile.tileType != IsometricUtils.IsoMap.IsoTileType.ERROR && theTile.height >= groundCheckPos.Z )
             {
                 return true;
             }
 
             return false;
+        }
+
+        public void CheckTileCollision()
+        {
+            // Check pos + vel + radius in cardinal directions.
+            Vector3 checkPos = IsoPos + IsoVel + new Vector3(Radius / 8);
+
+            // if the tile at checkpos is on a higher zlevel than isopos is then dang, gotta bounce
+            IsometricUtils.IsoMap.IsoTile theTile = theMap.GetTile((int)checkPos.X / 2, (int)checkPos.Y / 2);
+            if (theTile.tileType != IsometricUtils.IsoMap.IsoTileType.NONE && theTile.tileType != IsometricUtils.IsoMap.IsoTileType.ERROR && theTile.height > ((int)checkPos.Z / 2))
+            {
+                // rebound if it's a wall, check for slopes tho
+                // boing
+                if (Math.Abs(IsoVel.X) > Math.Abs(IsoVel.Y))
+                {
+                    IsoVel.X = -IsoVel.X * 0.6f;
+                }
+                else
+                {
+                    IsoVel.Y = -IsoVel.Y * 0.6f;
+                }
+            }
         }
 
 

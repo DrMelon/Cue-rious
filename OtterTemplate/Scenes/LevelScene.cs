@@ -66,8 +66,9 @@ namespace Cuerious.Scenes
             renderMapEntA.AddGraphic(renderMapA);
             renderMapEntB.AddGraphic(renderMapB);
 
-
-
+            cueBall.myMovement.IsoPos.Z = 4;
+            cueBall.myMovement.IsoPos.Y = -2;
+            cueBall.myMovement.IsoVel.Y = 0.15f;
             Add(renderMapEntA);
             Add(renderMapEntB);
             Add(cueBall);
@@ -91,7 +92,7 @@ namespace Cuerious.Scenes
             }
 
 
-            cueBall.myMovement.IsoPos.Y = 6 + ((float)Math.Sin(Game.Timer * 0.01f) * 4.0f);
+            
 
             renderMapEntA.Layer = cueBall.Layer + 1;
             renderMapEntB.Layer = cueBall.Layer - 1;
@@ -105,6 +106,9 @@ namespace Cuerious.Scenes
 
             cueBallDissolve.X = cueBall.X;
             cueBallDissolve.Y = cueBall.Y;
+
+            // Move cam to ball
+            CenterCamera(cueBall.X, cueBall.Y);
         }
 
         public void UpdateMaps()
