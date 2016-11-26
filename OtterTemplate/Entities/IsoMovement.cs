@@ -15,6 +15,7 @@ namespace Cuerious.Entities
         public bool OnGround;
         public float Radius;
         public IsometricUtils.IsoMap theMap;
+        public bool IsFrozen;
 
         public IsoMovement(IsometricUtils.IsoMap map, float R)
         {
@@ -37,20 +38,46 @@ namespace Cuerious.Entities
             if(!FindGround())
             {
                 IsoVel.Z -= 0.00981f;
+                OnGround = false;
             }
-            else if(IsoVel.Z < 0.0f)
+            else 
             {
-                IsoVel.Z = -IsoVel.Z * 0.8f;
+                // apply ground friction
+                IsoVel.X *= 0.995f;
+                IsoVel.Y *= 0.995f;
+
+                if (IsoVel.Z < 0.0f)
+                {
+                    IsoVel.Z = -IsoVel.Z * 0.8f;
+
+                    if (Math.Abs(IsoVel.Z) < 0.0001)
+                    {
+                        OnGround = true;
+
+                        IsoVel.Z = 0.0f;
+                    }
+                }
             }
 
             // Update Pos from Vel
-            IsoPos += IsoVel;
+            if(Math.Abs(IsoVel.X) < 0.0001 && Math.Abs(IsoVel.Y) < 0.0001 && OnGround)
+            {
+                IsoVel.X = 0;
+                IsoVel.Y = 0;
+                IsoVel.Z = 0;
+                IsFrozen = true;
+            }
+
+            if (!IsFrozen)
+            {
+                IsoPos += IsoVel;
+            }
 
             // Update X and Y to match Iso Pos, also depth layer
             Vector3 convertedPos = IsometricUtils.IsoToScreenSpace(IsoPos);
             Entity.X = convertedPos.X + (IsometricUtils.IsoWidth * 2) - Radius * 2;
             Entity.Y = convertedPos.Y + (IsometricUtils.IsoHeight * 2) - Radius;
-            Entity.Layer = 0;//(int)convertedPos.Z;
+            Entity.Layer = (int)convertedPos.Z;
 
 
         }
